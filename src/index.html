@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../node_modules/web3/dist/web3.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <button id="create-bet">Criar bet</button>
+    <script>
+
+    // Conecte ao Ganache
+    const web3 = new Web3('http://127.0.0.1:7545');
+
+    // ABI do contrato (copie do arquivo compilado pelo Truffle)
+    const contractABI = [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        }
+      ],
+      "name": "EventCreated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "bets",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "events",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "finalized",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "winningOutcomeIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "participants",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "selectedOutcome",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "totalBets",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_description",
+          "type": "string"
+        },
+        {
+          "internalType": "string[]",
+          "name": "_outcomes",
+          "type": "string[]"
+        }
+      ],
+      "name": "createEvent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_eventId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_outcomeIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "placeBet",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_eventId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_winningOutcomeIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "finalizeEvent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_eventId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getEvent",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string[]",
+          "name": "",
+          "type": "string[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ];
+
+    // Endereço do contrato implantado (veja no terminal ao rodar 'truffle migrate')
+    const contractAddress = "0x0c5cd75Be66C62EF494D58cde6540C5f7Af77Ca5";
+
+    // Instância do contrato
+    const bettingContract = new web3.eth.Contract(contractABI, contractAddress);
+
+    async function getAccounts() {
+        const accounts = await web3.eth.getAccounts();
+        console.log("Contas disponíveis no Ganache:", accounts);
+        return accounts;
+    }
+
+
+    async function createEvent(owner) {
+        const outcomes = ["Cara", "Coroa"];
+        const description = "Lançamento de Moeda";
+
+        await bettingContract.methods
+            .createEvent(description, outcomes)
+             .send({ from: owner, gas: 170000 });
+        
+        console.log("Evento criado com sucesso!");
+    }
+
+    async function placeBet(user, eventId, outcomeIndex, amount) {
+        const gas = await bettingContract.methods
+            .placeBet(eventId, outcomeIndex)
+            .send({ from: user, value: web3.utils.toWei(amount, "ether"), gas: 170000 });
+        console.log(`Aposta feita por ${user} no evento ${eventId}, no resultado ${outcomeIndex}, ${gas}`);
+    }
+
+    async function finalizeEvent(owner, eventId, winningOutcomeIndex) {
+        await bettingContract.methods
+            .finalizeEvent(eventId, winningOutcomeIndex)
+            .send({ from: owner });
+        console.log(`Evento ${eventId} finalizado com o resultado ${winningOutcomeIndex}`);
+    }
+
+    async function getEvent(eventId) {
+        const event = await bettingContract.methods.getEvent(eventId).call();
+        console.log("Detalhes do Evento:", event);
+    }
+
+    async function main() {
+        const accounts = await getAccounts();
+
+        // Dono cria o evento
+        await createEvent(accounts[0]);
+
+        // Usuários apostam
+        await placeBet(accounts[1], 0, 0, "1"); // Conta 1 aposta 1 ETH no resultado 0 ("Cara")
+        await placeBet(accounts[2], 0, 1, "2"); // Conta 2 aposta 2 ETH no resultado 1 ("Coroa")
+
+        // Consultar o evento
+        //await getEvent(0);
+
+        // Finalizar o evento
+        await finalizeEvent(accounts[0], 0, 1); // O dono define "Coroa" como resultado vencedor
+    }
+
+        //main().catch((error) => console.error(error));
+
+        document.getElementById('create-bet').addEventListener('click', async function() {
+            const accounts = await getAccounts();
+            const owner = accounts[0];  // pegar parametro
+
+            await createEvent(owner);
+        });
+
+        document.getElementById('apostar').addEventListener('click', async function() {
+            const accounts = await getAccounts();
+            const owner = accounts[0];  // pegar parametro
+
+            await createEvent(owner);
+        });
+
+    
+    </script>
+</body>
+</html>
