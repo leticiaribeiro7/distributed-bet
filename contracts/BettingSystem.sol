@@ -26,14 +26,22 @@ contract BettingSystem {
         _;
     }
 
-    function createEvent(string memory _description, string[] memory _outcomes) public onlyOwner {
+    event BetCriada(uint256 eventId, string description);
+    event BetEfetuada(uint256 eventId, address indexed user, uint256 amount, uint256 outcome);
+    event BetFinalizada(uint256 eventId, uint256 result);
+
+    function createEvent(string memory _description, string[] memory _outcomes) public {
         require(_outcomes.length >= 2, "O evento deve ter pelo menos dois resultados possiveis.");
+        uint256 eventId = events.length; // verificar antes de add um novo na lista porque começa do zero
 
         Event storage newEvent = events.push();
         newEvent.description = _description;
         newEvent.outcomes = _outcomes;
         newEvent.active = true;
         newEvent.finalized = false;
+
+
+        emit BetCriada(eventId, _description);
     }
 
     function placeBet(uint256 _eventId, uint256 _outcomeIndex) public payable {
@@ -46,6 +54,8 @@ contract BettingSystem {
         betEvent.bets[msg.sender] += msg.value;
         betEvent.selectedOutcome[msg.sender] = _outcomeIndex;
         participants[_eventId].push(msg.sender);
+
+        emit BetEfetuada(_eventId, msg.sender, msg.value, _outcomeIndex);
     }
 
     function finalizeEvent(uint256 _eventId, uint256 _winningOutcomeIndex) public onlyOwner {
@@ -70,19 +80,11 @@ contract BettingSystem {
                 payable(user).transfer(reward);
             }
         }
+
+        emit BetFinalizada(_eventId, _winningOutcomeIndex);
     }
 
-    function getEvent(uint256 _eventId)
-        public
-        view
-        returns (
-            string memory,
-            string[] memory,
-            bool,
-            bool,
-            uint256
-        )
-    {
+    function getEvent(uint256 _eventId) public view returns (string memory, string[] memory, bool, bool, uint256) {
         require(_eventId < events.length, "Evento invalido.");
         Event storage betEvent = events[_eventId];
         return (

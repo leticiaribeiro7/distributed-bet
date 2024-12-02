@@ -1,24 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="../node_modules/web3/dist/web3.min.js"></script>
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="../node_modules/web3/dist/web3.min.js"></script>
+  <title>Plataforma de Apostas</title>
 </head>
+
 <body>
-    <button id="create-bet">Criar bet</button>
-    <script>
+  <h1>Plataforma de Apostas</h1>
 
-    // Conecte ao Ganache
-    const web3 = new Web3('http://127.0.0.1:7545');
+  <!-- Seleção de conta -->
+  <h2>Selecione sua Conta</h2>
+  <select id="account-selector"></select>
 
-    // ABI do contrato (copie do arquivo compilado pelo Truffle)
-    const contractABI =  [
+  <!-- Formulário para criar eventos -->
+  <h2>Criar Evento</h2>
+  <form id="create-event-form">
+    <label for="description">Descrição do Evento:</label>
+    <input type="text" id="description" required>
+    <br>
+    <label for="outcomes">Resultados (separados por vírgulas):</label>
+    <input type="text" id="outcomes" required>
+    <br>
+    <button type="submit">Criar Evento</button>
+  </form>
+
+  <!-- Lista de eventos -->
+  <h2>Eventos Disponíveis</h2>
+  <ul id="events-list"></ul>
+
+
+  <script>
+    const web3 = new Web3('http://127.0.0.1:7545'); // Ganache
+
+        const contractABI =[
     {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        }
+      ],
+      "name": "BetCriada",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "outcome",
+          "type": "uint256"
+        }
+      ],
+      "name": "BetEfetuada",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "eventId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "result",
+          "type": "uint256"
+        }
+      ],
+      "name": "BetFinalizada",
+      "type": "event"
     },
     {
       "inputs": [
@@ -191,83 +281,125 @@
     }
   ];
 
-    // Endereço do contrato implantado (veja no terminal ao rodar 'truffle migrate')
-    const contractAddress = "0x8A0CB90644fc9E34D35d5150110238e33FA3245a";
+    // Endereço do contrato implantado
+    const contractAddress = "0x262847Dd76384eD792d4464c46Bd47936Fc4752D";
 
-    // Instância do contrato
     const bettingContract = new web3.eth.Contract(contractABI, contractAddress);
 
-    async function getAccounts() {
-        const accounts = await web3.eth.getAccounts();
-        console.log("Contas disponíveis no Ganache:", accounts);
-        return accounts;
+    // Obter contas e popular o seletor
+    async function populateAccountSelector() {
+      const accounts = await web3.eth.getAccounts();
+      const accountSelector = document.getElementById("account-selector");
+
+      accounts.forEach(account => {
+        const option = document.createElement("option");
+        option.value = account;
+        option.textContent = account;
+        accountSelector.appendChild(option);
+      });
     }
 
-
-    async function createEvent(owner) {
-        const outcomes = ["Cara", "Coroa"];
-        const description = "Lançamento de Moeda";
-
-        await bettingContract.methods
-            .createEvent(description, outcomes)
-             .send({ from: owner, gas: 170000 });
-        
-        console.log("Evento criado com sucesso!");
+    // Obter conta selecionada
+    function getSelectedAccount() {
+      return document.getElementById("account-selector").value;
     }
 
-    async function placeBet(user, eventId, outcomeIndex, amount) {
-        const gas = await bettingContract.methods
-            .placeBet(eventId, outcomeIndex)
-            .send({ from: user, value: web3.utils.toWei(amount, "ether"), gas: 170000 });
-        console.log(`Aposta feita por ${user} no evento ${eventId}, no resultado ${outcomeIndex}, ${gas}`);
+    // Criar evento
+    async function createEvent(description, outcomes) {
+      const owner = getSelectedAccount();
+      await bettingContract.methods.createEvent(description, outcomes).send({ from: owner, gas: 200000 });
+      console.log("Evento criado com sucesso!");
     }
 
-    async function finalizeEvent(owner, eventId, winningOutcomeIndex) {
-        await bettingContract.methods
-            .finalizeEvent(eventId, winningOutcomeIndex)
-            .send({ from: owner });
-        console.log(`Evento ${eventId} finalizado com o resultado ${winningOutcomeIndex}`);
+    // Fazer aposta
+    async function placeBet(eventId, outcomeIndex, amount) {
+      const user = getSelectedAccount();
+      await bettingContract.methods.placeBet(eventId, outcomeIndex).send({
+        from: user,
+        value: web3.utils.toWei(amount, "ether"),
+        gas: 170000
+      });
+      console.log(`Aposta feita por ${user} no evento ${eventId}, no resultado ${outcomeIndex}`);
     }
 
+    // Finalizar evento (opcional)
+    async function finalizeEvent(eventId, winningOutcomeIndex) {
+      const owner = getSelectedAccount();
+      await bettingContract.methods.finalizeEvent(eventId, winningOutcomeIndex).send({ from: owner });
+      console.log(`Evento ${eventId} finalizado com o resultado ${winningOutcomeIndex}`);
+    }
+
+    // Obter detalhes do evento
     async function getEvent(eventId) {
-        const event = await bettingContract.methods.getEvent(eventId).call();
-        console.log("Detalhes do Evento:", event);
+      return await bettingContract.methods.getEvent(eventId).call();
     }
 
-    async function main() {
-        const accounts = await getAccounts();
+    // Atualizar lista de eventos
+    async function updateEventsList() {
+      const eventsList = document.getElementById('events-list');
+      eventsList.innerHTML = ''; // Limpar lista
+      let eventId = 0;
 
-        // Dono cria o evento
-        await createEvent(accounts[0]);
 
-        // Usuários apostam
-        await placeBet(accounts[1], 0, 0, "1"); // Conta 1 aposta 1 ETH no resultado 0 ("Cara")
-        await placeBet(accounts[2], 0, 1, "2"); // Conta 2 aposta 2 ETH no resultado 1 ("Coroa")
+      try {
+        while (true) {
+          const event = await getEvent(eventId);
+          console.log(event)
 
-        // Consultar o evento
-        //await getEvent(0);
-
-        // Finalizar o evento
-        await finalizeEvent(accounts[0], 0, 1); // O dono define "Coroa" como resultado vencedor
+          if (event[2]) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <strong>${event[0]}</strong> - Resultados: ${event[1].join(', ')}
+              <button onclick="betOnEvent(${eventId}, 0)">Apostar no Resultado ${event[1][0]}</button>
+              <button onclick="betOnEvent(${eventId}, 1)">Apostar no Resultado ${event[1][1]}</button>
+              <button onclick="finalizarBet(${eventId})">Finalizar aposta</button>
+            `;
+            eventsList.appendChild(li);
+          }
+          eventId++;
+        }
+      } catch (error) {
+        console.log("Todos os eventos listados.");
+      }
     }
 
-        main().catch((error) => console.error(error));
+    // Apostar em um evento
+    async function betOnEvent(eventId, outcomeIndex) {
+      const amount = prompt("Quanto deseja apostar (em ETH)?", "1");
+      if (amount) {
+        await placeBet(eventId, outcomeIndex, amount);
+        alert("Aposta realizada com sucesso!");
+      }
+    }
 
-        document.getElementById('create-bet').addEventListener('click', async function() {
-            const accounts = await getAccounts();
-            const owner = accounts[0];  // pegar parametro
+    // Finalizar uma aposta e pagar os ganhadores
+    async function finalizarBet(eventId) {
+      let randomNumber = parseInt(Math.random() * 2)
+      try {
+        await finalizeEvent(eventId, randomNumber)
+      } catch (error) {
+        alert("Apenas o dono da aposta pode realizar essa função!")
+      }
+    }
 
-            await createEvent(owner);
-        });
+    // Manipulador de criação de evento
+    document.getElementById('create-event-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const description = document.getElementById('description').value;
+      const outcomes = document.getElementById('outcomes').value.split(',').map(s => s.trim());
 
-        document.getElementById('apostar').addEventListener('click', async function() {
-            const accounts = await getAccounts();
-            const owner = accounts[0];  // pegar parametro
+      await createEvent(description, outcomes);
+      alert("Evento criado com sucesso!");
+      document.getElementById('create-event-form').reset();
+      await updateEventsList();
+    });
 
-            await createEvent(owner);
-        });
-
-    
-    </script>
+    // Inicializar a página
+    window.onload = async () => {
+      await populateAccountSelector();
+      await updateEventsList();
+    };
+  </script>
 </body>
+
 </html>
