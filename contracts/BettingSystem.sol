@@ -2,25 +2,20 @@
 pragma solidity ^0.8.0;
 
 contract BettingSystem {
-    
-    event EventCreated(uint256 indexed eventId, string description); // Evento para criação de evento
-    
     struct Event {
-        string description;
-        string[] outcomes;
-        bool active;
-        bool finalized;
-        uint256 winningOutcomeIndex;
+        string description;  // Descrição do evento
+        string[] outcomes;   // Resultados possíveis (ex.: "cara", "coroa")
+        bool active;         // Se o evento ainda está ativo
+        bool finalized;      // Se o evento foi finalizado
+        uint256 winningOutcomeIndex; // Índice do resultado vencedor
+        mapping(uint256 => uint256) totalBets; // Valor total apostado em cada resultado
+        mapping(address => uint256) bets; // Aposta do usuário
+        mapping(address => uint256) selectedOutcome; // Resultado escolhido pelo usuário
     }
 
-    Event[] public events;
-    mapping(uint256 => mapping(uint256 => uint256)) public totalBets; // eventId -> outcome -> total bet amount
-    mapping(uint256 => mapping(address => uint256)) public bets;      // eventId -> user -> bet amount
-    mapping(uint256 => mapping(address => uint256)) public selectedOutcome; // eventId -> user -> outcome index
-    mapping(uint256 => address[]) public participants; // eventId -> participants
+    Event[] public events; // Lista de eventos
+    mapping(uint256 => address[]) public participants; // Participantes por evento
     address public owner;
-
-
 
     constructor() {
         owner = msg.sender;
@@ -32,29 +27,24 @@ contract BettingSystem {
     }
 
     function createEvent(string memory _description, string[] memory _outcomes) public onlyOwner {
-        uint256 eventId = events.length;
-
         require(_outcomes.length >= 2, "O evento deve ter pelo menos dois resultados possiveis.");
-        events.push(Event({
-            description: _description,
-            outcomes: _outcomes,
-            active: true,
-            finalized: false,
-            winningOutcomeIndex: 0
-        }));
 
-        emit EventCreated(eventId, _description);
+        Event storage newEvent = events.push();
+        newEvent.description = _description;
+        newEvent.outcomes = _outcomes;
+        newEvent.active = true;
+        newEvent.finalized = false;
     }
 
     function placeBet(uint256 _eventId, uint256 _outcomeIndex) public payable {
         require(_eventId < events.length, "Evento invalido.");
         require(events[_eventId].active, "Evento nao esta ativo.");
-        require(_outcomeIndex < events[_eventId].outcomes.length, "Resultado invalido."); // Adicionado
         require(msg.value > 0, "Voce precisa apostar algum valor.");
 
-        totalBets[_eventId][_outcomeIndex] += msg.value;
-        bets[_eventId][msg.sender] += msg.value;
-        selectedOutcome[_eventId][msg.sender] = _outcomeIndex;
+        Event storage betEvent = events[_eventId];
+        betEvent.totalBets[_outcomeIndex] += msg.value;
+        betEvent.bets[msg.sender] += msg.value;
+        betEvent.selectedOutcome[msg.sender] = _outcomeIndex;
         participants[_eventId].push(msg.sender);
     }
 
@@ -68,13 +58,15 @@ contract BettingSystem {
         betEvent.finalized = true;
         betEvent.winningOutcomeIndex = _winningOutcomeIndex;
 
+        // Distribuir fundos
         address[] memory eventParticipants = participants[_eventId];
-        uint256 totalPool = totalBets[_eventId][_winningOutcomeIndex];
+        uint256 totalPool = betEvent.totalBets[_winningOutcomeIndex];
 
         for (uint256 i = 0; i < eventParticipants.length; i++) {
             address user = eventParticipants[i];
-            if (selectedOutcome[_eventId][user] == _winningOutcomeIndex) {
-                uint256 reward = (bets[_eventId][user] * totalPool) / totalBets[_eventId][_winningOutcomeIndex];
+            if (betEvent.selectedOutcome[user] == _winningOutcomeIndex) {
+                uint256 reward = (betEvent.bets[user] * totalPool) /
+                    betEvent.totalBets[_winningOutcomeIndex];
                 payable(user).transfer(reward);
             }
         }

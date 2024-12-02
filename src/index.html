@@ -14,55 +14,11 @@
     const web3 = new Web3('http://127.0.0.1:7545');
 
     // ABI do contrato (copie do arquivo compilado pelo Truffle)
-    const contractABI = [
+    const contractABI =  [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "eventId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "description",
-          "type": "string"
-        }
-      ],
-      "name": "EventCreated",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "bets",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
     },
     {
       "inputs": [
@@ -132,56 +88,6 @@
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "selectedOutcome",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "totalBets",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -286,7 +192,7 @@
   ];
 
     // Endereço do contrato implantado (veja no terminal ao rodar 'truffle migrate')
-    const contractAddress = "0x0c5cd75Be66C62EF494D58cde6540C5f7Af77Ca5";
+    const contractAddress = "0x8A0CB90644fc9E34D35d5150110238e33FA3245a";
 
     // Instância do contrato
     const bettingContract = new web3.eth.Contract(contractABI, contractAddress);
@@ -345,7 +251,7 @@
         await finalizeEvent(accounts[0], 0, 1); // O dono define "Coroa" como resultado vencedor
     }
 
-        //main().catch((error) => console.error(error));
+        main().catch((error) => console.error(error));
 
         document.getElementById('create-bet').addEventListener('click', async function() {
             const accounts = await getAccounts();
