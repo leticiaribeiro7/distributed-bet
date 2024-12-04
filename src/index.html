@@ -31,6 +31,9 @@
   <h2>Eventos Disponíveis</h2>
   <ul id="events-list"></ul>
 
+  <!-- Lista de eventos -->
+  <h2>Eventos Finalizados</h2>
+  <ul id="ended-events-list"></ul>
 
   <script>
     const web3 = new Web3('http://127.0.0.1:7545'); // Ganache
@@ -40,11 +43,10 @@
     async function getAbi() {
       const res = await fetch('../build/contracts/BettingSystem.json')
       const data = await res.json()
-      console.log(data.abi)
       return data.abi
     }
 
-    const contractAddress = "0xF54624f7580fc6Bd1698220a7eF09088c12Be72A";
+    const contractAddress = "0x42fc8FA0a28f17418cb93D1749322a701420073c";
     let bettingContract;
 
     getAbi().then(abi => {
@@ -52,7 +54,7 @@
     }).catch(error => {
       console.error("Erro ao obter ABI:", error);
     });
-    
+
 
     // Obter contas e popular o seletor
     async function populateAccountSelector() {
@@ -90,7 +92,7 @@
       console.log(`Aposta feita por ${user} no evento ${eventId}, no resultado ${outcomeIndex}`);
     }
 
-    // Finalizar evento (opcional)
+    // Finalizar evento
     async function finalizeEvent(eventId, winningOutcomeIndex) {
       const owner = getSelectedAccount();
       await bettingContract.methods.finalizeEvent(eventId, winningOutcomeIndex).send({ from: owner });
@@ -105,24 +107,35 @@
     // Atualizar lista de eventos
     async function updateEventsList() {
       const eventsList = document.getElementById('events-list');
+      const endedEvents = document.getElementById('ended-events-list');
       eventsList.innerHTML = ''; // Limpar lista
+      endedEvents.innerHTML = ''; // Limpar lista
       let eventId = 0;
 
 
       try {
         while (true) {
-          const event = await getEvent(eventId);
-          console.log(event)
+          const {
+            0: description,
+            1: outcomes,
+            2: active,
+            3: finalized,
+            4: winningOutcomeIndex
+          } = await getEvent(eventId);
 
-          if (event[2]) {
+          if (active) {
             const li = document.createElement('li');
             li.innerHTML = `
-              <strong>${event[0]}</strong> - Resultados: ${event[1].join(', ')}
-              <button onclick="betOnEvent(${eventId}, 0)">Apostar no Resultado ${event[1][0]}</button>
-              <button onclick="betOnEvent(${eventId}, 1)">Apostar no Resultado ${event[1][1]}</button>
+              <strong>${description}</strong> - Resultados: ${outcomes.join(', ')}
+              <button onclick="betOnEvent(${eventId}, 0)">Apostar no Resultado ${outcomes[0]}</button>
+              <button onclick="betOnEvent(${eventId}, 1)">Apostar no Resultado ${outcomes[1]}</button>
               <button onclick="finalizarBet(${eventId})">Finalizar aposta</button>
             `;
             eventsList.appendChild(li);
+          } else if (finalized) {
+              const li = document.createElement('li');
+              li.innerHTML = `<strong>${description}</strong> - Resultado final: ${outcomes[winningOutcomeIndex]}`
+              endedEvents.appendChild(li);
           }
           eventId++;
         }
@@ -167,6 +180,8 @@
       await populateAccountSelector();
       await updateEventsList();
     };
+
+
   </script>
 </body>
 
