@@ -1,0 +1,8 @@
+=============== Dec 9, 2024 (-03) ===============
+18:30:48.635932 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+18:30:48.641801 db@open opening
+18:30:48.642202 version@stat F·[] S·0B[] Sc·[]
+18:30:48.649222 db@janitor F·2 G·0
+18:30:48.649265 db@open done T·7.439086ms
+18:30:48.650154 db@close closing
+18:30:48.650276 db@close done T·112.551µs

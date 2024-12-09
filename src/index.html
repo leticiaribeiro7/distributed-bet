@@ -36,7 +36,7 @@
   <ul id="ended-events-list"></ul>
 
   <script>
-    const web3 = new Web3('http://127.0.0.1:7545'); // Ganache
+    const web3 = new Web3('http://127.0.0.1:8545'); // Ganache
 
 
 
@@ -46,7 +46,7 @@
       return data.abi
     }
 
-    const contractAddress = "0x42fc8FA0a28f17418cb93D1749322a701420073c";
+    const contractAddress = "0x403e1d4e083e4a15f43f34770a160b14f5947ddf";
     let bettingContract;
 
     getAbi().then(abi => {
@@ -123,6 +123,8 @@
             4: winningOutcomeIndex
           } = await getEvent(eventId);
 
+          console.log(description)
+          
           if (active) {
             const li = document.createElement('li');
             li.innerHTML = `
@@ -140,7 +142,7 @@
           eventId++;
         }
       } catch (error) {
-        console.log("Todos os eventos listados.");
+        console.log("Todos os eventos listados.", error);
       }
     }
 

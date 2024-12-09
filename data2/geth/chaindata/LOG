@@ -1,0 +1,18 @@
+=============== Dec 9, 2024 (-03) ===============
+18:31:11.423373 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+18:31:11.435590 db@open opening
+18:31:11.436537 version@stat F·[] S·0B[] Sc·[]
+18:31:11.442542 db@janitor F·2 G·0
+18:31:11.442596 db@open done T·6.963861ms
+18:31:11.443861 db@close closing
+18:31:11.443949 db@close done T·83.394µs
+=============== Dec 9, 2024 (-03) ===============
+18:32:03.466008 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+18:32:03.466213 version@stat F·[] S·0B[] Sc·[]
+18:32:03.466242 db@open opening
+18:32:03.466313 journal@recovery F·1
+18:32:03.471239 journal@recovery recovering @1
+18:32:03.484051 memdb@flush created L0@2 N·10 S·633B "H>\xa6..\xe0\x06\xde,v3":"r\x00\x00..\xe0\x06\xde,v5"
+18:32:03.488359 version@stat F·[1] S·633B[633B] Sc·[0.25]
+18:32:03.506975 db@janitor F·3 G·0
+18:32:03.507020 db@open done T·40.759053ms
