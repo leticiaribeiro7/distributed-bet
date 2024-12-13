@@ -35,6 +35,10 @@
   <h2>Eventos Finalizados</h2>
   <ul id="ended-events-list"></ul>
 
+  <!-- Histórico -->
+  <h2>Histórico</h2>
+  <div id="logs"></div>
+
   <script>
     const web3 = new Web3('http://127.0.0.1:8546'); // Ganache
 
@@ -127,12 +131,20 @@
           
           if (active) {
             const li = document.createElement('li');
+            
+            // Gerar os botões para cada resultado
+            const buttonsHTML = outcomes
+              .map((outcome, index) => `<button onclick="betOnEvent(${eventId}, ${index})">Apostar em ${outcome}</button>`)
+              .join(' ');
+
+            // Definir o conteúdo HTML da li
             li.innerHTML = `
               <strong>${description}</strong> - Resultados: ${outcomes.join(', ')}
-              <button onclick="betOnEvent(${eventId}, 0)">Apostar no Resultado ${outcomes[0]}</button>
-              <button onclick="betOnEvent(${eventId}, 1)">Apostar no Resultado ${outcomes[1]}</button>
+              ${buttonsHTML}
               <button onclick="finalizarBet(${eventId})">Finalizar aposta</button>
             `;
+
+            // Adicionar a li à lista de eventos
             eventsList.appendChild(li);
           } else if (finalized) {
               const li = document.createElement('li');
@@ -155,9 +167,9 @@
       if (amount && !(web3.eth.getBalance(user) > 0)) {
         await placeBet(eventId, outcomeIndex, amount, user);
         alert("Aposta realizada com sucesso!");
+      } else {
+        alert('Você não tem saldo para apostar!')
       }
-
-      alert('Você não tem saldo para apostar!')
 
     }
 
@@ -172,24 +184,73 @@
     }
 
     async function getAllContractLogs() {
+      let eventsFormatted = []
+
       try {
         const events = await bettingContract.getPastEvents('allEvents', {
-          fromBlock: 0, // Ou o bloco inicial desejado
+          fromBlock: 0,
           toBlock: 'latest',
         });
 
+
         // Logar todas as transações
-        events.forEach(async event => {
-          console.log(`Evento: ${event.event}`);
-          //console.log(`Dados: ${JSON.stringify(event.returnValues)}`);
-          console.log(`Transação: ${event.transactionHash}`);
+        for (event of events) {
+        
           const transaction = await web3.eth.getTransaction(event.transactionHash)
-          console.log(`Detalhes transação: ${transaction.from}`)
-        });
+
+          eventsFormatted.push({
+            evento: event.event,
+            transactionHash: event.transactionHash,
+            from: transaction.from,
+            to:transaction.to,
+            value: web3.utils.fromWei(transaction.value, "ether"),
+            description: event.returnValues.description
+          })
+
+        }
+        return eventsFormatted
       } catch (error) {
         console.error('Erro ao buscar eventos:', error);
       }
     }
+
+    async function updateLogs() {
+      const logsDiv = document.getElementById('logs');
+      logsDiv.innerHTML = '';
+
+      const events = await getAllContractLogs();
+
+      if (events.length === 0) {
+        logsDiv.innerHTML = '<p>Nenhum evento encontrado.</p>';
+        return;
+      }
+
+      console.log(events)
+
+      events.forEach((event) => {
+        const p = document.createElement('p');
+
+        if (event.evento == "BetCriada") {
+          p.textContent = `${event.from} criou uma nova aposta usando o contrato ${event.to},
+          isso custou ${event.value} ETH`
+          //logsDiv.appendChild(p);
+        }
+
+        if (event.evento == "BetEfetuada") {
+          p.textContent = `${event.from} apostou ${event.value} ETH na Bet ${event.description}`
+          //logsDiv.appendChild(p);
+        }
+
+        if (event.evento == "BetFinalizada") {
+          p.textContent = `A aposta ${event.description} foi finalizada`
+         // logsDiv.appendChild(p);
+        }
+
+        logsDiv.prepend(p)
+      });
+    }
+
+
 
 
     // Manipulador de criação de evento
@@ -209,7 +270,7 @@
     window.onload = async () => {
       await populateAccountSelector();
       await updateEventsList();
-      await getAllContractLogs();
+      await updateLogs();
     };
 
 

@@ -27,8 +27,8 @@ contract BettingSystem {
     }
 
     event BetCriada(uint256 eventId, string description);
-    event BetEfetuada(uint256 eventId, address indexed user, uint256 amount, uint256 outcome);
-    event BetFinalizada(uint256 eventId, uint256 result);
+    event BetEfetuada(uint256 eventId, address indexed user, uint256 amount, uint256 outcome, string description);
+    event BetFinalizada(uint256 eventId, uint256 result, string description);
 
     function createEvent(string memory _description, string[] memory _outcomes) public {
         require(_outcomes.length >= 2, "O evento deve ter pelo menos dois resultados possiveis.");
@@ -55,7 +55,7 @@ contract BettingSystem {
         betEvent.selectedOutcome[msg.sender] = _outcomeIndex;
         participants[_eventId].push(msg.sender);
 
-        emit BetEfetuada(_eventId, msg.sender, msg.value, _outcomeIndex);
+        emit BetEfetuada(_eventId, msg.sender, msg.value, _outcomeIndex, betEvent.description);
     }
 
     function finalizeEvent(uint256 _eventId, uint256 _winningOutcomeIndex) public onlyOwner {
@@ -81,7 +81,7 @@ contract BettingSystem {
             }
         }
 
-        emit BetFinalizada(_eventId, _winningOutcomeIndex);
+        emit BetFinalizada(_eventId, _winningOutcomeIndex, betEvent.description);
     }
 
     function getEvent(uint256 _eventId) public view returns (string memory, string[] memory, bool, bool, uint256) {

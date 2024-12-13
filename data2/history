@@ -31,3 +31,12 @@ eth.accounts
 miner.start()
 eth.accounts
 eth.getBalance("0xfd886cdaccbc1130bf628e27b8ac4833645ece40")
+admin.peers
+eth.accounts
+eth.getBlock()
+eth.getBlock
+eth.getBlockNumber
+eth.getBlockNumber()
+personal
+miner.start()
+miner.stop()

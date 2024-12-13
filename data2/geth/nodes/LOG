@@ -66,3 +66,15 @@
 21:25:20.500469 db@janitor F·5 G·1
 21:25:20.500507 db@janitor removing table-11
 21:25:20.500567 db@open done T·19.196399ms
+22:48:13.120075 db@close closing
+22:48:13.120816 db@close done T·515.628µs
+=============== Dec 13, 2024 (-03) ===============
+15:56:31.600450 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:56:31.602010 version@stat F·[1 1] S·335B[159B 176B] Sc·[0.25 0.00]
+15:56:31.602045 db@open opening
+15:56:31.602123 journal@recovery F·1
+15:56:31.604612 journal@recovery recovering @16
+15:56:31.607766 memdb@flush created L0@18 N·1 S·159B "loc..seq,v15":"loc..seq,v15"
+15:56:31.609469 version@stat F·[2 1] S·494B[318B 176B] Sc·[0.50 0.00]
+15:56:31.626141 db@janitor F·5 G·0
+15:56:31.626238 db@open done T·24.17573ms
