@@ -36,21 +36,21 @@
   <ul id="ended-events-list"></ul>
 
   <script>
-    const web3 = new Web3('http://127.0.0.1:8545'); // Ganache
+    const web3 = new Web3('http://127.0.0.1:8546'); // Ganache
 
 
-
-    async function getAbi() {
+    async function getConfig() {
       const res = await fetch('../build/contracts/BettingSystem.json')
       const data = await res.json()
-      return data.abi
+      return data
     }
 
-    const contractAddress = "0x403e1d4e083e4a15f43f34770a160b14f5947ddf";
     let bettingContract;
 
-    getAbi().then(abi => {
-      bettingContract = new web3.eth.Contract(abi, contractAddress);
+    // pega enderçeo dinamicamente ao compilar o contrato
+    getConfig().then(data => {
+      const contractAddress = data.networks["1337"].address;
+      bettingContract = new web3.eth.Contract(data.abi, contractAddress);
     }).catch(error => {
       console.error("Erro ao obter ABI:", error);
     });
@@ -61,10 +61,11 @@
       const accounts = await web3.eth.getAccounts();
       const accountSelector = document.getElementById("account-selector");
 
-      accounts.forEach(account => {
+      accounts.forEach(async account => {
+        let balance = await web3.eth.getBalance(account)
         const option = document.createElement("option");
         option.value = account;
-        option.textContent = account;
+        option.textContent = `${account } - saldo ${balance}`;
         accountSelector.appendChild(option);
       });
     }
@@ -82,8 +83,7 @@
     }
 
     // Fazer aposta
-    async function placeBet(eventId, outcomeIndex, amount) {
-      const user = getSelectedAccount();
+    async function placeBet(eventId, outcomeIndex, amount, user) {
       await bettingContract.methods.placeBet(eventId, outcomeIndex).send({
         from: user,
         value: web3.utils.toWei(amount, "ether"),
@@ -149,10 +149,16 @@
     // Apostar em um evento
     async function betOnEvent(eventId, outcomeIndex) {
       const amount = prompt("Quanto deseja apostar (em ETH)?", "1");
-      if (amount) {
-        await placeBet(eventId, outcomeIndex, amount);
+      const user = getSelectedAccount();
+      
+
+      if (amount && !(web3.eth.getBalance(user) > 0)) {
+        await placeBet(eventId, outcomeIndex, amount, user);
         alert("Aposta realizada com sucesso!");
       }
+
+      alert('Você não tem saldo para apostar!')
+
     }
 
     // Finalizar uma aposta e pagar os ganhadores
@@ -164,6 +170,27 @@
         alert("Apenas o dono da aposta pode realizar essa função!")
       }
     }
+
+    async function getAllContractLogs() {
+      try {
+        const events = await bettingContract.getPastEvents('allEvents', {
+          fromBlock: 0, // Ou o bloco inicial desejado
+          toBlock: 'latest',
+        });
+
+        // Logar todas as transações
+        events.forEach(async event => {
+          console.log(`Evento: ${event.event}`);
+          //console.log(`Dados: ${JSON.stringify(event.returnValues)}`);
+          console.log(`Transação: ${event.transactionHash}`);
+          const transaction = await web3.eth.getTransaction(event.transactionHash)
+          console.log(`Detalhes transação: ${transaction.from}`)
+        });
+      } catch (error) {
+        console.error('Erro ao buscar eventos:', error);
+      }
+    }
+
 
     // Manipulador de criação de evento
     document.getElementById('create-event-form').addEventListener('submit', async (event) => {
@@ -177,10 +204,12 @@
       await updateEventsList();
     });
 
+
     // Inicializar a página
     window.onload = async () => {
       await populateAccountSelector();
       await updateEventsList();
+      await getAllContractLogs();
     };
 
 
