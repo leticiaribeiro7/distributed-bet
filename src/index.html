@@ -40,7 +40,7 @@
   <div id="logs"></div>
 
   <script>
-    const web3 = new Web3('http://127.0.0.1:8546'); // Ganache
+    const web3 = new Web3('http://127.0.0.1:8547'); // geth
 
 
     async function getConfig() {
@@ -163,8 +163,8 @@
       const amount = prompt("Quanto deseja apostar (em ETH)?", "1");
       const user = getSelectedAccount();
       
-
-      if (amount && !(web3.eth.getBalance(user) > 0)) {
+      // Verifica se a conta foi selecionada, se colocou o valor da aposta e se tem dinheiro suficiente
+      if (user && amount && !(web3.eth.getBalance(user) > 0)) { 
         await placeBet(eventId, outcomeIndex, amount, user);
         alert("Aposta realizada com sucesso!");
       } else {
@@ -193,7 +193,6 @@
         });
 
 
-        // Logar todas as transações
         for (event of events) {
         
           const transaction = await web3.eth.getTransaction(event.transactionHash)
@@ -233,17 +232,14 @@
         if (event.evento == "BetCriada") {
           p.textContent = `${event.from} criou uma nova aposta usando o contrato ${event.to},
           isso custou ${event.value} ETH`
-          //logsDiv.appendChild(p);
         }
 
         if (event.evento == "BetEfetuada") {
           p.textContent = `${event.from} apostou ${event.value} ETH na Bet ${event.description}`
-          //logsDiv.appendChild(p);
         }
 
         if (event.evento == "BetFinalizada") {
           p.textContent = `A aposta ${event.description} foi finalizada`
-         // logsDiv.appendChild(p);
         }
 
         logsDiv.prepend(p)

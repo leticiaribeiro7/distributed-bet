@@ -8,6 +8,7 @@ contract BettingSystem {
         bool active;         // Se o evento ainda está ativo
         bool finalized;      // Se o evento foi finalizado
         uint256 winningOutcomeIndex; // Índice do resultado vencedor
+        uint256 totalPool;
         mapping(uint256 => uint256) totalBets; // Valor total apostado em cada resultado
         mapping(address => uint256) bets; // Aposta do usuário
         mapping(address => uint256) selectedOutcome; // Resultado escolhido pelo usuário
@@ -53,6 +54,7 @@ contract BettingSystem {
         betEvent.totalBets[_outcomeIndex] += msg.value;
         betEvent.bets[msg.sender] += msg.value;
         betEvent.selectedOutcome[msg.sender] = _outcomeIndex;
+        betEvent.totalPool += msg.value;
         participants[_eventId].push(msg.sender);
 
         emit BetEfetuada(_eventId, msg.sender, msg.value, _outcomeIndex, betEvent.description);
@@ -70,13 +72,14 @@ contract BettingSystem {
 
         // Distribuir fundos
         address[] memory eventParticipants = participants[_eventId];
-        uint256 totalPool = betEvent.totalBets[_winningOutcomeIndex];
+        uint256 totalWinning = betEvent.totalBets[_winningOutcomeIndex]; // valor total no resultado que ganhou
+        uint256 totalPool = betEvent.totalPool;
 
         for (uint256 i = 0; i < eventParticipants.length; i++) {
             address user = eventParticipants[i];
             if (betEvent.selectedOutcome[user] == _winningOutcomeIndex) {
-                uint256 reward = (betEvent.bets[user] * totalPool) /
-                    betEvent.totalBets[_winningOutcomeIndex];
+                uint256 reward = (betEvent.bets[user] * totalPool) / //prêmio: total apostado pelo usuario * total apostado no evento / total apostado no que ganhou
+                    totalWinning;
                 payable(user).transfer(reward);
             }
         }
