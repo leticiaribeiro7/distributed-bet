@@ -91,13 +91,13 @@
 ### Contas
 
 <p align="justify">
- O sistema foi projetado para criar contas de usuários de forma segura, permitindo que cada participante realize operações financeiras, como depósito e saque do ganho obtido em apostas.
+ O sistema cria automaticamente contas com 100 ETH de saldo ao executar o arquivo genesis.json da blockchain para cada nó, ao todo são 10 contas distribuídas entre os 3 nós.
 </p>
 
 ### Eventos
 
 <p align="justify">
- Os usuários têm permissão em criar eventos.
+ Qualquer usuário pode criar um evento, desde que tenha saldo para pagar o gás da transação. Esse evento é exibido como uma aposta com os resultados possíveis e botões para os usuários escolherem em qual deseja apostar; o evento fica disponível até que quem criou o finalize.
 </p>
 
 ### Apostas
