@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="../node_modules/web3/dist/web3.min.js"></script>
+  <title>Plataforma de Apostas</title>
+</head>
+
+<body>
+  <h1>Plataforma de Apostas</h1>
+
+  <!-- Seleção de conta -->
+  <h2>Selecione sua Conta</h2>
+  <select id="account-selector"></select>
+
+  <!-- Formulário para criar eventos -->
+  <h2>Criar Evento</h2>
+  <form id="create-event-form">
+    <label for="description">Descrição do Evento:</label>
+    <input type="text" id="description" required>
+    <br>
+    <label for="outcomes">Resultados (separados por vírgulas):</label>
+    <input type="text" id="outcomes" required>
+    <br>
+    <button type="submit">Criar Evento</button>
+  </form>
+
+  <!-- Lista de eventos -->
+  <h2>Eventos Disponíveis</h2>
+  <ul id="events-list"></ul>
+
+  <!-- Lista de eventos -->
+  <h2>Eventos Finalizados</h2>
+  <ul id="ended-events-list"></ul>
+
+  <!-- Histórico -->
+  <h2>Histórico</h2>
+  <div id="logs"></div>
+
+  <script src="./script.js"></script>
+
+</body>
+</html>
