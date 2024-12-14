@@ -103,13 +103,19 @@
 ### Apostas
 
 <p align="justify">
- A transação é feita de maneira transparente e os usuários só conseguem apostar em um determinado evento se tiverem saldo suficiente para tal.
+ A transação é feita de maneira transparente, todo o histórico fica disponível para quem quiser visualizar, e os usuários só conseguem apostar em um determinado evento se tiverem saldo suficiente para tal.
 </p>
 
 ### Simulação
 
 <p align="justify">
- As apostas são marcadas como "concluídas" para simular que um evento já ocorreu.
+ O contrato emite eventos em 3 situações: 
+</p>
+	1. Nova aposta criada
+	2. Alguém apostou um valor 
+	3. Aposta finalizada
+<p align="justify">
+	Esses eventos também podem ser visualizados no histórico que fica disponível para todos os usuários.
 </p>
 
 ### Odds
