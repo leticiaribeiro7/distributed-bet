@@ -1,18 +1,8 @@
 =============== Dec 13, 2024 (-03) ===============
-17:32:37.410619 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
-17:32:37.419278 db@open opening
-17:32:37.420198 version@stat F·[] S·0B[] Sc·[]
-17:32:37.424106 db@janitor F·2 G·0
-17:32:37.424155 db@open done T·4.840549ms
-17:32:37.427208 db@close closing
-17:32:37.427312 db@close done T·98.129µs
-=============== Dec 13, 2024 (-03) ===============
-17:32:59.406575 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
-17:32:59.406780 version@stat F·[] S·0B[] Sc·[]
-17:32:59.406824 db@open opening
-17:32:59.406911 journal@recovery F·1
-17:32:59.413527 journal@recovery recovering @1
-17:32:59.416961 memdb@flush created L0@2 N·10 S·633B "H>\xa6..\xe0\x06\xde,v3":"r\x00\x00..\xe0\x06\xde,v5"
-17:32:59.420717 version@stat F·[1] S·633B[633B] Sc·[0.25]
-17:32:59.434724 db@janitor F·3 G·0
-17:32:59.434751 db@open done T·27.915266ms
+21:56:00.433860 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:56:00.445973 db@open opening
+21:56:00.448196 version@stat F·[] S·0B[] Sc·[]
+21:56:00.454233 db@janitor F·2 G·0
+21:56:00.454295 db@open done T·8.224323ms
+21:56:00.456498 db@close closing
+21:56:00.456552 db@close done T·52.711µs
