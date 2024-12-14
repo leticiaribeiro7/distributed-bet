@@ -21,6 +21,14 @@
 
 ## Fundamentação Teórica
 
+<p align="justify">
+	O desenvolvimento de um sistema distribuído de apostas é uma tarefa difícil que requer uma base conceitual sólida, para que o produto final seja o mais confiável e seguro possível. Afinal, estamos lidando com pessoas, dinheiro e apostas: uma combinação de fatores que requer transparência aos usuários para evitar complicações. 
+</p>
+
+<p align="justify">
+	Esta seção busca resumir os conceitos aprendidos e utilizados na criação do Distributed Bet, fundamentando o conhecimento da equipe de desenvolvimento.
+</p>
+
 ### Ledger Distribuído
 
 <p align="justify">
@@ -28,7 +36,7 @@
 </p>
 
 <p align="center">
-    <img src="images/modelo.jpg" width="600"/>
+    <img src="imagedlt.webp" width="600"/>
     <br/>
     <b>Figura 1.</b> Sistema de Ledger Centralizado x Distribuído. <b>Fonte:</b> Internet.
 </p>
@@ -47,7 +55,7 @@
 - **Transparência**: os usuários da rede podem visualizar todo o histórico de transação.
 
 <p align="justify">
-	Por conta desses atributos, as DL's são aplicadas em serviços financeiros, sistemas de criptomoedas (bitcoin, por exemplo), gestão de suprimentos, sistemas de votação e até em assistência médica (registros de saúde). 
+	Por conta desses atributos, as DLT's são aplicadas em serviços financeiros, sistemas de criptomoedas (bitcoin, por exemplo), gestão de suprimentos, sistemas de votação e até em assistência médica (registros de saúde). 
 </p>
 
 <p align="justify">
@@ -58,6 +66,12 @@
 
 <p align="justify">
 	Segundo a IBM Blockchain, uma blockchain é um livro-razão compartilhado e imutável que facilita o processo de registro de transações e rastreamento de ativos em uma rede de negócios. Praticamente qualquer coisa pode ser rastreada e negociada em uma rede blockchain, e no caso do Distributed Bet, são o dinheiro e as apostas.
+</p>
+
+<p align="center">
+    <img src="blockchain.jpg" width="600"/>
+    <br/>
+    <b>Figura 2.</b> Blockchain. <b>Fonte:</b> Internet.
 </p>
 
 <p align="justify">
@@ -72,46 +86,58 @@
 
 ## Metodologia e Resultados
 
-<p align="justify">
- .
-</p>
+[A escrever. Implementando no código...]
 
 ### Contas
 
-
+<p align="justify">
+ O sistema foi projetado para criar contas de usuários de forma segura, permitindo que cada participante realize operações financeiras, como depósito e saque do ganho obtido em apostas.
+</p>
 
 ### Eventos
 
-
+<p align="justify">
+ Os usuários têm permissão em criar eventos.
+</p>
 
 ### Apostas
 
-
+<p align="justify">
+ A transação é feita de maneira transparente e os usuários só conseguem apostar em um determinado evento se tiverem saldo suficiente para tal.
+</p>
 
 ### Simulação
 
-
+<p align="justify">
+ As apostas são marcadas como "concluídas" para simular que um evento já ocorreu.
+</p>
 
 ### Odds
 
-
+<p align="justify">
+ O sistema de Odds implementado é simples e fixo. O usuário, com base na probabilidade, atribui um peso para cada agente do evento. Exemplo, se em uma partida de futebol joga Corinthians e Vasco, na criação desse evento, a odd no Corinthians seria de 1.5 enquanto a do Vasco de 2.5. O usuário supõe ou determina, nesse caso, que o Corinthians tem maior probabilidade de vitória e por isso, sua odd é inferior a do Vasco. Há caso de adição de uma odd para o empate também.
+</p>
 
 ### Contabilidade
 
-
+<p align="justify">
+ [A conferir].
+</p>
 
 ### Publicação
 
-
-
-### Documentação
-
-
+<p align="justify">
+ [A conferir].
+</p>
 
 ## Conclusão
 
 <p align="justify">
-	.
+	O sistema de apostas distribuído apresentou-se como uma solução promissora para eliminar intermediários, garantir transparência das transações aos usuários e impedir as intervenções do governo. A utilização de tecnologias de ledger distribuído, blockchain e contratos inteligentes mostrou-se eficaz na automação e na segurança das operações. 
+</p>
+
+<p align="justify">
+	A proposta do problema estimulou o estudo da equipe, que mal tinha conhecimento prévio dos assuntos necessários para o desenvolvimento do sistema. Dessa forma, foi benéfico para o aprendizado, apesar de não obter total êxito no produto final.
 </p>
 
 
