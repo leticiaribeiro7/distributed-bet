@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="../node_modules/web3/dist/web3.min.js"></script>
+  <link rel="stylesheet" href="style.css">
   <title>Plataforma de Apostas</title>
 </head>
 
@@ -16,30 +17,29 @@
   <select id="account-selector"></select>
 
   <!-- Formulário para criar eventos -->
-  <h2>Criar Evento</h2>
+  <h2>Criar Nova Bet</h2>
   <form id="create-event-form">
-    <label for="description">Descrição do Evento:</label>
+    <label for="description">Descrição da Bet:</label>
     <input type="text" id="description" required>
     <br>
     <label for="outcomes">Resultados (separados por vírgulas):</label>
     <input type="text" id="outcomes" required>
     <br>
-    <button type="submit">Criar Evento</button>
+    <button type="submit">Criar Bet</button>
   </form>
 
   <!-- Lista de eventos -->
-  <h2>Eventos Disponíveis</h2>
+  <h2>Bets Disponíveis</h2>
   <ul id="events-list"></ul>
 
   <!-- Lista de eventos -->
-  <h2>Eventos Finalizados</h2>
+  <h2>Bets Finalizadas</h2>
   <ul id="ended-events-list"></ul>
 
   <!-- Histórico -->
   <h2>Histórico</h2>
   <div id="logs"></div>
 
-  <script src="./script.js"></script>
-
 </body>
+  <script src="script.js"></script>
 </html>

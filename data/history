@@ -1,10 +1,5 @@
-eth.accounts
 miner.start()
 miner.stop()
+admin.nodeInfo.enode
 miner.start()
 miner.stop()
-eth.accounts
-miner.start()
-miner.stop()
-eth.getTransaction("hash=0xed51213f153912cc86ba48d65e82223dbeda68493fac4ecb23dcd37d04101095")
-eth.getTransaction("0xed51213f153912cc86ba48d65e82223dbeda68493fac4ecb23dcd37d04101095")

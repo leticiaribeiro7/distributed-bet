@@ -1,0 +1,8 @@
+admin.addPeer("enode://5150e270cf6f3dd952d42e820874458a435e995bdf4c78f5c1309b001c3a4a5288b59e307c75a7fc339d696fe71ca34fc62c18ed8d25db21e7ab9c7616355066@[::]:30303?discport=0")
+admin.peers
+eth.getBlock
+eth.getBlock()
+eth.getBlockNumber
+eth.getBlockNumber()
+eth.getBlockTransactionNumber()
+eth.getBlockTransactionCount()

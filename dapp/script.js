@@ -1,5 +1,5 @@
 
-const web3 = new Web3(`http://127.0.0.1:8545`); // geth
+const web3 = new Web3(`http://127.0.0.1:8547`); // geth
 let bettingContract;
 
 
@@ -129,7 +129,7 @@ async function updateEventsList() {
         eventId++;
     }
     } catch (error) {
-    console.log("Todos os eventos listados.", error);
+        console.log("Todos os eventos listados.", error);
     }
 }
 
@@ -139,9 +139,9 @@ async function updateEventsList() {
 async function finalizarBet(eventId) {
     let randomNumber = parseInt(Math.random() * 2)
     try {
-    await finalizeEvent(eventId, randomNumber)
+        await finalizeEvent(eventId, randomNumber)
     } catch (error) {
-    alert("Apenas o dono da aposta pode realizar essa função!")
+        alert(error)
     }
 }
 
@@ -234,6 +234,7 @@ window.onload = async () => {
 
     // Desbloqueia as contas ao carregar a página
     accounts.forEach(async account => {
-    await web3.eth.personal.unlockAccount(account, "senha", 15000)
+        console.log(account)
+        await web3.eth.personal.unlockAccount(account, "senha", 15000)
     })
 }
