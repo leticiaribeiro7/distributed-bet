@@ -88,7 +88,7 @@
 <p align="justify">
 Entre as ferramentas utilizadas no projeto estão:
 
-- Go Ethereum (Geth) versão 1.10.7: Um cliente de execução da rede Ethereum, desenvolvido em linguagem Go. O Geth permite executar contratos inteligentes, realizar transações e mineração de blocos, proporcionando um ambiente muito próximo de uma Blockchain real.
+- Go Ethereum (Geth) versão 1.10.7: Um cliente de execução da rede Ethereum, desenvolvido em linguagem Go. O Geth permite executar contratos inteligentes, realizar transações e mineração de blocos, além de utilizar o algoritmo de consenso Proof of Work (PoW) proporcionando um ambiente muito próximo de uma Blockchain real. 
 - Truffle: Utilizado para a compilação, teste e deploy dos contratos inteligentes, facilitando o desenvolvimento e gerenciamento dos contratos na Blockchain.
 - HTML, CSS e JavaScript: Utilizados para a criação da interface do usuário e estilização
 - Biblioteca Serve: Responsável por executar o servidor do dApp (Decentralized Application), permitindo que os usuários realizem operações na Blockchain.
