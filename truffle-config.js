@@ -76,14 +76,14 @@ module.exports = {
     },
     //
     // An additional network, but with some advanced options…
-     advanced: {
+    //advanced: {
     //   port: 8777,             // Custom port
     //   network_id: 1342,       // Custom network
     //   gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
     //   gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
     //   from: "0xE7d16c34e360f38Fa97BC5084801B5672359B686",        // Account to send transactions from (default: accounts[0])
     //   websocket: true         // Enable EventEmitter interface for web3 (default: false)
-    }, // outra conta: 0x32b179E9cc0bE49A22AfEf373f0D571263cd6016
+    //}, // outra conta: 0x32b179E9cc0bE49A22AfEf373f0D571263cd6016
     //
     // Useful for deploying to a public network.
     // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.

@@ -1,5 +1,5 @@
 
-const web3 = new Web3(`http://127.0.0.1:8547`); // geth
+const web3 = new Web3(`http://127.0.0.1:8545`); // geth
 let bettingContract;
 
 
@@ -11,14 +11,17 @@ async function getConfig() {
 
 
 function updateContract() {
-    // pega enderçeo e abi dinamicamente ao compilar o contrato
-    getConfig().then(data => {
-        const contractAddress = data.networks["1337"].address;
-        bettingContract = new web3.eth.Contract(data.abi, contractAddress);
-    }).catch(error => {
-        console.error("Erro ao obter ABI:", error);
-    });
+    return getConfig()
+        .then(data => {
+            const contractAddress = data.networks["1337"]?.address;
+            bettingContract = new web3.eth.Contract(data.abi, contractAddress);
+            console.log("Contrato carregado:", contractAddress);
+        })
+        .catch(error => {
+            console.error("Erro ao obter o contrato:", error);
+        });
 }
+
 
 // Obter contas e popular o seletor
 async function populateAccountSelector() {
@@ -26,11 +29,11 @@ async function populateAccountSelector() {
     const accountSelector = document.getElementById("account-selector");
 
     accounts.forEach(async account => {
-    let balance = await web3.eth.getBalance(account)
-    const option = document.createElement("option");
-    option.value = account;
-    option.textContent = `${account } - saldo ${web3.utils.fromWei(balance, "ether")} ETH`;
-    accountSelector.appendChild(option);
+        let balance = await web3.eth.getBalance(account)
+        const option = document.createElement("option");
+        option.value = account;
+        option.textContent = `${account} - saldo ${web3.utils.fromWei(balance, "ether")} ETH`;
+        accountSelector.appendChild(option);
     });
 }
 
@@ -49,9 +52,9 @@ async function createEvent(description, outcomes) {
 // Fazer aposta
 async function placeBet(eventId, outcomeIndex, amount, user) {
     await bettingContract.methods.placeBet(eventId, outcomeIndex).send({
-    from: user,
-    value: web3.utils.toWei(amount, "ether"),
-    gas: 170000
+        from: user,
+        value: web3.utils.toWei(amount, "ether"),
+        gas: 170000
     });
     console.log(`Aposta feita por ${user} no evento ${eventId}, no resultado ${outcomeIndex}`);
 }
@@ -59,8 +62,12 @@ async function placeBet(eventId, outcomeIndex, amount, user) {
 // Finalizar evento
 async function finalizeEvent(eventId, winningOutcomeIndex) {
     const owner = getSelectedAccount();
-    await bettingContract.methods.finalizeEvent(eventId, winningOutcomeIndex).send({ from: owner });
-    console.log(`Evento ${eventId} finalizado com o resultado ${winningOutcomeIndex}`);
+    const { 0: description } = await getEvent(eventId);
+    const result = await bettingContract.methods.finalizeEvent(eventId, winningOutcomeIndex).send({ from: owner });
+
+    console.log(result)
+    alert(`Bet ${description} finalizada`);
+    window.location.reload(true)
 }
 
 // Obter detalhes do evento
@@ -72,14 +79,16 @@ async function getEvent(eventId) {
 async function betOnEvent(eventId, outcomeIndex) {
     const amount = prompt("Quanto deseja apostar (em ETH)?", "1");
     const user = getSelectedAccount();
-    
+
     // Verifica se a conta foi selecionada, se colocou o valor da aposta e se tem dinheiro suficiente
-    if (user && amount && !(web3.eth.getBalance(user) > 0)) { 
+    if (user && amount && !(web3.eth.getBalance(user) > 0)) {
         await placeBet(eventId, outcomeIndex, amount, user);
         alert("Aposta realizada com sucesso!");
     } else {
         alert('Você não tem saldo para apostar!')
     }
+    
+    await updateLogs();
 
 }
 
@@ -93,41 +102,39 @@ async function updateEventsList() {
 
 
     try {
-    while (true) {
-        const {
-        0: description,
-        1: outcomes,
-        2: active,
-        3: finalized,
-        4: winningOutcomeIndex
-        } = await getEvent(eventId);
+        while (true) {
+            const {
+                0: description,
+                1: outcomes,
+                2: active,
+                3: finalized,
+                4: winningOutcomeIndex
+            } = await getEvent(eventId);
 
-        console.log(description)
-        
-        if (active) {
-        const li = document.createElement('li');
-        
-        // Gerar os botões para cada resultado
-        const buttonsHTML = outcomes
-            .map((outcome, index) => `<button onclick="betOnEvent(${eventId}, ${index})">Apostar em ${outcome}</button>`)
-            .join(' ');
+            if (active) {
+                const li = document.createElement('li');
 
-        // Definir o conteúdo HTML da li
-        li.innerHTML = `
-            <strong>${description}</strong> - Resultados: ${outcomes.join(', ')}
-            ${buttonsHTML}
-            <button onclick="finalizarBet(${eventId})">Finalizar aposta</button>
-        `;
+                // Gerar os botões para cada resultado
+                const buttonsHTML = outcomes
+                    .map((outcome, index) => `<button onclick="betOnEvent(${eventId}, ${index})">Apostar em ${outcome}</button>`)
+                    .join(' ');
 
-        // Adicionar a li à lista de eventos
-        eventsList.appendChild(li);
-        } else if (finalized) {
-            const li = document.createElement('li');
-            li.innerHTML = `<strong>${description}</strong> - Resultado final: ${outcomes[winningOutcomeIndex]}`
-            endedEvents.appendChild(li);
+                // Definir o conteúdo HTML da li
+                li.innerHTML = `
+                <strong>${description}</strong> - Resultados: ${outcomes.join(', ')}
+                ${buttonsHTML}
+                <button id="finalizaBet" onclick="finalizarBet(${eventId})">Finalizar aposta</button>
+                `;
+
+                // Adicionar a li à lista de eventos
+                eventsList.appendChild(li);
+            } else if (finalized) {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${description}</strong> - Resultado final: ${outcomes[winningOutcomeIndex]}`
+                endedEvents.appendChild(li);
+            }
+            eventId++;
         }
-        eventId++;
-    }
     } catch (error) {
         console.log("Todos os eventos listados.", error);
     }
@@ -137,11 +144,14 @@ async function updateEventsList() {
 
 // Finalizar uma aposta e pagar os ganhadores
 async function finalizarBet(eventId) {
-    let randomNumber = parseInt(Math.random() * 2)
+
     try {
+        const { 1: outcomes } = await getEvent(eventId)
+        let randomNumber = parseInt(Math.random() * outcomes.length)
+
         await finalizeEvent(eventId, randomNumber)
     } catch (error) {
-        alert(error)
+        console.log(error)
     }
 }
 
@@ -155,14 +165,14 @@ async function getAllContractLogs() {
 
 
         for (event of events) {
-        
+
             const transaction = await web3.eth.getTransaction(event.transactionHash)
 
             eventsFormatted.push({
                 evento: event.event,
                 transactionHash: event.transactionHash,
                 from: transaction.from,
-                to:transaction.to,
+                to: transaction.to,
                 value: web3.utils.fromWei(transaction.value, "ether"),
                 description: event.returnValues.description
             })
@@ -181,7 +191,7 @@ async function updateLogs() {
 
     const events = await getAllContractLogs();
 
-    if (events.length === 0) {
+    if (!events) {
         logsDiv.innerHTML = '<p>Nenhum evento encontrado.</p>';
         return;
     }
@@ -192,8 +202,7 @@ async function updateLogs() {
         const p = document.createElement('p');
 
         if (event.evento == "BetCriada") {
-            p.textContent = `${event.from} criou uma nova aposta usando o contrato ${event.to},
-            isso custou ${event.value} ETH`
+            p.textContent = `${event.from} criou uma nova aposta usando o contrato ${event.to}`
         }
 
         if (event.evento == "BetEfetuada") {
@@ -222,19 +231,29 @@ document.getElementById('create-event-form').addEventListener('submit', async (e
     await updateLogs();
 });
 
+// Desbloqueia as contas uma vez enquanto o navegador estiver aberto
+document.addEventListener("DOMContentLoaded", async function () {
+    if (!sessionStorage.getItem("ContasDesbloqueadas")) {
+        const accounts = await web3.eth.getAccounts();
 
-// Inicializar a página
+        for (const account of accounts) {
+            console.log(account);
+            await web3.eth.personal.unlockAccount(account, "senha", 15000);
+        }
+
+        sessionStorage.setItem("ContasDesbloqueadas", "true");
+    }
+});
+
 window.onload = async () => {
-    updateContract();
-    await populateAccountSelector();
-    await updateEventsList();
-    await updateLogs();
+    try {
+        await updateContract();
+        await populateAccountSelector(); 
+        await updateEventsList();        
+        await updateLogs();              
 
-    const accounts = await web3.eth.getAccounts();
-
-    // Desbloqueia as contas ao carregar a página
-    accounts.forEach(async account => {
-        console.log(account)
-        await web3.eth.personal.unlockAccount(account, "senha", 15000)
-    })
+        
+    } catch (error) {
+        console.error("Erro ao inicializar a página:", error);
+    }
 }

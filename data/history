@@ -3,3 +3,16 @@ miner.stop()
 admin.nodeInfo.enode
 miner.start()
 miner.stop()
+personal
+miner.start()
+miner.stop()
+admin.nodeInfo.enode
+miner.stop()
+miner.start()
+admin.peers
+miner.stop()
+miner.start()
+admin.peers
+miner.stop()
+miner.start()
+admin.peers
