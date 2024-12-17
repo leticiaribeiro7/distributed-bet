@@ -36,7 +36,7 @@
 </p>
 
 <p align="center">
-    <img src="imagedlt.webp" width="600"/>
+    <img src="images/imagedlt.webp" width="600"/>
     <br/>
     <b>Figura 1.</b> Sistema de Ledger Centralizado x Distribuído. <b>Fonte:</b> Internet.
 </p>
@@ -69,7 +69,7 @@
 </p>
 
 <p align="center">
-    <img src="blockchain.jpg" width="600"/>
+    <img src="images/blockchain.jpg" width="600"/>
     <br/>
     <b>Figura 2.</b> Blockchain. <b>Fonte:</b> Internet.
 </p>
@@ -168,11 +168,11 @@ npm install
    geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data3 --port 30305 --http.port 8547 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
 ```
 
-- Executar esse comando no 1º e 2º nó e copiar os endereços
+- Executar esse comando no console do 1º e 2º nó e copiar os endereços
 ```
  admin.nodeInfo.enode
 ```
-- Executar esse comando no 2º nó utilizando o endereço do 1º e no 3º nó utilizando o endereço do 1º e 2º, isso permitirá conexões p2p entre todos os nós
+- Executar esse comando no console do 2º nó utilizando o endereço do 1º e no 3º nó utilizando o endereço do 1º e 2º, isso permitirá conexões p2p entre todos os nós
 ```
  admin.addPeer("endereco_do_comando_anterior") 
 ```
