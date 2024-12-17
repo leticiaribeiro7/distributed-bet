@@ -102,7 +102,7 @@ Entre as ferramentas utilizadas no projeto estão:
 ### Contas
 
 <p align="justify">
- O sistema cria automaticamente contas com 100 ETH de saldo ao executar o arquivo genesis.json da blockchain para cada nó, ao todo são 10 contas distribuídas entre os 3 nós.
+ O sistema cria automaticamente contas com 100 ETH de saldo ao executar o arquivo genesis.json da blockchain para cada nó, ao todo são 10 contas em cada um dos 3 nós.
 </p>
 
 ### Eventos
@@ -146,8 +146,50 @@ Entre as ferramentas utilizadas no projeto estão:
 ### Publicação
 
 <p align="justify">
- [A conferir].
+ O histórico de todos os eventos emitidos ficam disponíveis para visualização de qualquer usuário. Detalhes importantes são registrados em cada mensagem, como a conta utilizada para apostar, valor da aposta e até endereço do contrato.
 </p>
+
+### Execução do Ambiente
+<p align="justify">
+ Para executar a blockchain e o dApp localmente, deve-se seguir o seguinte passo-a-passo:
+</p>
+
+- Instalar o Geth na versão 1.10.7
+- Instalar dependências
+```
+npm install
+```
+- Executar os 3 nós
+```
+ geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data --port 30303 --http.port 8545 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+ 
+  geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data2 --port 30304 --http.port 8546 -nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+  
+   geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data3 --port 30305 --http.port 8547 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+```
+
+- Executar esse comando no 1º e 2º nó e copiar os endereços
+```
+ admin.nodeInfo.enode
+```
+- Executar esse comando no 2º nó utilizando o endereço do 1º e no 3º nó utilizando o endereço do 1º e 2º, isso permitirá conexões p2p entre todos os nós
+```
+ admin.addPeer("endereco_do_comando_anterior") 
+```
+- Iniciar a mineração de blocos, que permite realizar transações na blockchain. Pode ser executado em apenas um nó
+```
+miner.start()
+```
+- Executar o servidor do dApp e abrí-lo em localhost:3000, isso permitirá visualizar a interface do usuário e desbloquear as contas habilitando a execução de transações
+```
+npx serve
+```
+- Fazer deploy do contrato inteligente na blockchain
+```
+truffle migrate --network geth 
+```
+
+Após executar os passos, é possível utilizar o dApp para criar e apostar em eventos.
 
 ## Conclusão
 
