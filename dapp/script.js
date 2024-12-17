@@ -1,5 +1,6 @@
 
-const web3 = new Web3(`http://127.0.0.1:8547`); // geth
+const portaServer = localStorage.getItem("portaServer") || "8545"
+const web3 = new Web3(`http://127.0.0.1:${portaServer}`); // geth
 let bettingContract;
 
 
@@ -217,6 +218,10 @@ async function updateLogs() {
     });
 }
 
+function escolherServer(porta) {
+    localStorage.setItem("portaServer", porta)
+    window.location.reload(true)
+}
 
 
 document.getElementById('create-event-form').addEventListener('submit', async (event) => {
@@ -244,6 +249,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         sessionStorage.setItem("ContasDesbloqueadas", "true");
     }
 });
+
 
 window.onload = async () => {
     try {

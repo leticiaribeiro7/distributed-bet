@@ -159,13 +159,19 @@ Entre as ferramentas utilizadas no projeto estão:
 ```
 npm install
 ```
+- Inicializar os 3 nós a partir do genesis.json
+```
+geth --datadir ./data init genesis.json
+geth --datadir ./data2 init genesis.json
+geth --datadir ./data3 init genesis.json
+```
 - Executar os 3 nós
 ```
  geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data --port 30303 --http.port 8545 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
  
-  geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data2 --port 30304 --http.port 8546 -nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data2 --port 30304 --http.port 8546 -nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
   
-   geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data3 --port 30305 --http.port 8547 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data3 --port 30305 --http.port 8547 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
 ```
 
 - Executar esse comando no console do 1º e 2º nó e copiar os endereços
