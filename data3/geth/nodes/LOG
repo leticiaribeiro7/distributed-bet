@@ -18,3 +18,13 @@
 22:04:32.102351 db@open done T·27.408893ms
 22:06:31.050752 db@close closing
 22:06:31.051080 db@close done T·322.434µs
+=============== Dec 17, 2024 (-03) ===============
+11:53:26.596717 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+11:53:26.597027 version@stat F·[1] S·176B[176B] Sc·[0.25]
+11:53:26.597076 db@open opening
+11:53:26.597153 journal@recovery F·1
+11:53:26.598138 journal@recovery recovering @3
+11:53:26.600460 memdb@flush created L0@5 N·1 S·159B "loc..seq,v4":"loc..seq,v4"
+11:53:26.602162 version@stat F·[2] S·335B[335B] Sc·[0.50]
+11:53:26.612436 db@janitor F·4 G·0
+11:53:26.612469 db@open done T·15.382392ms

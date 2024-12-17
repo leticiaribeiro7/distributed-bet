@@ -16,3 +16,8 @@ admin.peers
 miner.stop()
 miner.start()
 admin.peers
+miner.start()
+miner.stop()
+miner.start()
+miner.stop()
+admin.nodeInfo.enode

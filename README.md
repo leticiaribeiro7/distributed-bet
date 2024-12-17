@@ -85,8 +85,19 @@
 </p>
 
 ## Metodologia e Resultados
+<p align="justify">
+Entre as ferramentas utilizadas no projeto estão:
 
-[A escrever. Implementando no código...]
+- Go Ethereum (Geth) versão 1.10.7: Um cliente de execução da rede Ethereum, desenvolvido em linguagem Go. O Geth permite executar contratos inteligentes, realizar transações e mineração de blocos, proporcionando um ambiente muito próximo de uma Blockchain real.
+- Truffle: Utilizado para a compilação, teste e deploy dos contratos inteligentes, facilitando o desenvolvimento e gerenciamento dos contratos na Blockchain.
+- HTML, CSS e JavaScript: Utilizados para a criação da interface do usuário e estilização
+- Biblioteca Serve: Responsável por executar o servidor do dApp (Decentralized Application), permitindo que os usuários realizem operações na Blockchain.
+</p>
+
+### Conexões
+<p align="justify">
+ Foram implementados 3 nós na blockchain, e todos se conectam com todos através da conexão peer-to-peer. Os blocos minerados são sincronizados entre os nós a todo momento, garantindo que todos tenham os dados mais atualizados, independente de qual nó o usuário esteja conectado.
+</p>
 
 ### Contas
 
@@ -111,9 +122,11 @@
 <p align="justify">
  O contrato emite eventos em 3 situações: 
 </p>
-	1. Nova aposta criada
-	2. Alguém apostou um valor 
-	3. Aposta finalizada
+
+1. Nova aposta criada
+2. Alguém apostou um valor 
+3. Aposta finalizada
+
 <p align="justify">
 	Esses eventos também podem ser visualizados no histórico que fica disponível para todos os usuários.
 </p>

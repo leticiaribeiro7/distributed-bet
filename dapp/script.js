@@ -1,5 +1,5 @@
 
-const web3 = new Web3(`http://127.0.0.1:8545`); // geth
+const web3 = new Web3(`http://127.0.0.1:8547`); // geth
 let bettingContract;
 
 
