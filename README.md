@@ -137,7 +137,6 @@ Entre as ferramentas utilizadas no projeto estão:
  O sistema de Odds implementado é um mecanismo de distribuição proporcional. Os participantes que apostaram no resultado vencedor recebem recompensas baseadas na sua contribuição relativa ao valor total acumulado do resultado vencedor. Isso incentiva apostas maiores em resultados considerados prováveis, mas também permite que apostas menores em resultados improváveis (caso vençam) recebam recompensas proporcionais ao risco. Um exemplo para melhor visualização:
 </p>
 
-<p align="justify">
 - Total acumulado: 1000 moedas.
 - Resultado vencedor tem 2 apostadores: apostador A apostou 100 moedas e apostador B apostou 50 moedas.
 - Total apostado: 150 moedas.
@@ -145,7 +144,6 @@ Entre as ferramentas utilizadas no projeto estão:
 A recompensa para seria: 
 - Caso A ganhasse: (100 x 1000)/150 = 666,67 moedas.
 - Caso B ganhasse: (50 x 1000)/150 = 333,33 moedas. 
-</p>
 
 <p align="justify">
  Sendo assim, o sistema premia corrretamente os vencedores com base no sistema de Odds implementado. 
