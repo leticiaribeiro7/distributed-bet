@@ -141,12 +141,24 @@ Entre as ferramentas utilizadas no projeto estão:
 - Resultado vencedor tem 2 apostadores: apostador A apostou 100 moedas e apostador B apostou 50 moedas.
 - Total apostado: 150 moedas.
 
-A recompensa para seria: 
+A recompensa para cada seria: 
 - Caso A ganhasse: (100 x 1000)/150 = 666,67 moedas.
 - Caso B ganhasse: (50 x 1000)/150 = 333,33 moedas. 
 
 <p align="justify">
  Sendo assim, o sistema premia corrretamente os vencedores com base no sistema de Odds implementado. 
+</p>
+
+<p align="center">
+    <img src="images/aposta1.jpg" width="600"/>
+    <br/>
+    <b>Figura 3.</b> Exemplo de 2 contas no sistema **antes** da realização de uma aposta. <b>Fonte:</b> Os autores.
+</p>
+
+<p align="center">
+    <img src="images/aposta2.jpg" width="600"/>
+    <br/>
+    <b>Figura 4.</b> Exemplo de 2 contas no sistema **depois** da realização de uma aposta. <b>Fonte:</b> Os autores.
 </p>
 
 ### Publicação
