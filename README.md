@@ -88,10 +88,10 @@
 <p align="justify">
 Entre as ferramentas utilizadas no projeto estão:
 
-- Go Ethereum (Geth) versão 1.10.7: Um cliente de execução da rede Ethereum, desenvolvido em linguagem Go. O Geth permite executar contratos inteligentes, realizar transações e mineração de blocos, além de utilizar o algoritmo de consenso Proof of Work (PoW) proporcionando um ambiente muito próximo de uma Blockchain real. 
-- Truffle: Utilizado para a compilação, teste e deploy dos contratos inteligentes, facilitando o desenvolvimento e gerenciamento dos contratos na Blockchain.
-- HTML, CSS e JavaScript: Utilizados para a criação da interface do usuário e estilização
-- Biblioteca Serve: Responsável por executar o servidor do dApp (Decentralized Application), permitindo que os usuários realizem operações na Blockchain.
+- **Go Ethereum (Geth) versão 1.10.7**: Um cliente de execução da rede Ethereum, desenvolvido em linguagem Go. O Geth permite executar contratos inteligentes, realizar transações e mineração de blocos, além de utilizar o algoritmo de consenso Proof of Work (PoW) proporcionando um ambiente muito próximo de uma Blockchain real. 
+- **Truffle**: Utilizado para a compilação, teste e deploy dos contratos inteligentes, facilitando o desenvolvimento e gerenciamento dos contratos na Blockchain.
+- **HTML, CSS e JavaScript**: Utilizados para a criação da interface do usuário e estilização
+- **Biblioteca Serve**: Responsável por executar o servidor do dApp (Decentralized Application), permitindo que os usuários realizem operações na Blockchain.
 </p>
 
 ### Conexões
@@ -131,16 +131,24 @@ Entre as ferramentas utilizadas no projeto estão:
 	Esses eventos também podem ser visualizados no histórico que fica disponível para todos os usuários.
 </p>
 
-### Odds
+### Odds e Contabilidade
 
 <p align="justify">
- O sistema de Odds implementado é simples e fixo. O usuário, com base na probabilidade, atribui um peso para cada agente do evento. Exemplo, se em uma partida de futebol joga Corinthians e Vasco, na criação desse evento, a odd no Corinthians seria de 1.5 enquanto a do Vasco de 2.5. O usuário supõe ou determina, nesse caso, que o Corinthians tem maior probabilidade de vitória e por isso, sua odd é inferior a do Vasco. Há caso de adição de uma odd para o empate também.
+ O sistema de Odds implementado é um mecanismo de distribuição proporcional. Os participantes que apostaram no resultado vencedor recebem recompensas baseadas na sua contribuição relativa ao valor total acumulado do resultado vencedor. Isso incentiva apostas maiores em resultados considerados prováveis, mas também permite que apostas menores em resultados improváveis (caso vençam) recebam recompensas proporcionais ao risco. Um exemplo para melhor visualização:
 </p>
 
-### Contabilidade
+<p align="justify">
+- Total acumulado: 1000 moedas.
+- Resultado vencedor tem 2 apostadores: apostador A apostou 100 moedas e apostador B apostou 50 moedas.
+- Total apostado: 150 moedas.
+
+A recompensa para seria: 
+- Caso A ganhasse: (100 x 1000)/150 = 666,67 moedas.
+- Caso B ganhasse: (50 x 1000)/150 = 333,33 moedas. 
+</p>
 
 <p align="justify">
- [A conferir].
+ Sendo assim, o sistema premia corrretamente os vencedores com base no sistema de Odds implementado. 
 </p>
 
 ### Publicação
