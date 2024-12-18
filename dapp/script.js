@@ -24,7 +24,7 @@ function updateContract() {
 }
 
 
-// Obter contas e popular o seletor
+// Busca contas e popula o seletor
 async function populateAccountSelector() {
     const accounts = await web3.eth.getAccounts();
     const accountSelector = document.getElementById("account-selector");
@@ -38,19 +38,16 @@ async function populateAccountSelector() {
     });
 }
 
-// Obter conta selecionada
 function getSelectedAccount() {
     return document.getElementById("account-selector").value;
 }
 
-// Criar evento
 async function createEvent(description, outcomes) {
     const owner = getSelectedAccount();
     await bettingContract.methods.createEvent(description, outcomes).send({ from: owner, gas: 200000 });
     console.log("Evento criado com sucesso!");
 }
 
-// Fazer aposta
 async function placeBet(eventId, outcomeIndex, amount, user) {
     await bettingContract.methods.placeBet(eventId, outcomeIndex).send({
         from: user,
@@ -60,7 +57,6 @@ async function placeBet(eventId, outcomeIndex, amount, user) {
     console.log(`Aposta feita por ${user} no evento ${eventId}, no resultado ${outcomeIndex}`);
 }
 
-// Finalizar evento
 async function finalizeEvent(eventId, winningOutcomeIndex) {
     const owner = getSelectedAccount();
     const { 0: description } = await getEvent(eventId);
@@ -71,12 +67,11 @@ async function finalizeEvent(eventId, winningOutcomeIndex) {
     window.location.reload(true)
 }
 
-// Obter detalhes do evento
 async function getEvent(eventId) {
     return await bettingContract.methods.getEvent(eventId).call();
 }
 
-// Apostar em um evento
+// Aposta em um evento
 async function betOnEvent(eventId, outcomeIndex) {
     const amount = prompt("Quanto deseja apostar (em ETH)?", "1");
     const user = getSelectedAccount();
@@ -93,12 +88,11 @@ async function betOnEvent(eventId, outcomeIndex) {
 
 }
 
-// Atualizar lista de eventos
 async function updateEventsList() {
     const eventsList = document.getElementById('events-list');
     const endedEvents = document.getElementById('ended-events-list');
-    eventsList.innerHTML = ''; // Limpar lista
-    endedEvents.innerHTML = ''; // Limpar lista
+    eventsList.innerHTML = '';
+    endedEvents.innerHTML = '';
     let eventId = 0;
 
 
@@ -115,19 +109,17 @@ async function updateEventsList() {
             if (active) {
                 const li = document.createElement('li');
 
-                // Gerar os botões para cada resultado
+                // Gera os botões para cada resultado
                 const buttonsHTML = outcomes
                     .map((outcome, index) => `<button onclick="betOnEvent(${eventId}, ${index})">Apostar em ${outcome}</button>`)
                     .join(' ');
 
-                // Definir o conteúdo HTML da li
                 li.innerHTML = `
                 <strong>${description}</strong> - Resultados: ${outcomes.join(', ')}
                 ${buttonsHTML}
                 <button id="finalizaBet" onclick="finalizarBet(${eventId})">Finalizar aposta</button>
                 `;
 
-                // Adicionar a li à lista de eventos
                 eventsList.appendChild(li);
             } else if (finalized) {
                 const li = document.createElement('li');
@@ -143,7 +135,7 @@ async function updateEventsList() {
 
 
 
-// Finalizar uma aposta e pagar os ganhadores
+// Finaliza uma aposta e paga os ganhadores
 async function finalizarBet(eventId) {
 
     try {
@@ -156,6 +148,7 @@ async function finalizarBet(eventId) {
     }
 }
 
+// Busca eventos emitidos no contrato
 async function getAllContractLogs() {
     let eventsFormatted = []
     try {
@@ -186,6 +179,7 @@ async function getAllContractLogs() {
     }
 }
 
+// Busca eventos emitidos e transforma em mensagens pro histórico 
 async function updateLogs() {
     const logsDiv = document.getElementById('logs');
     logsDiv.innerHTML = '';
@@ -218,6 +212,7 @@ async function updateLogs() {
     });
 }
 
+// Guarda a porta do servidor escolhido pelo usuario
 function escolherServer(porta) {
     localStorage.setItem("portaServer", porta)
     window.location.reload(true)
@@ -236,7 +231,7 @@ document.getElementById('create-event-form').addEventListener('submit', async (e
     await updateLogs();
 });
 
-// Desbloqueia as contas uma vez enquanto o navegador estiver aberto
+// Desbloqueia as contas apenas uma vez enquanto o navegador estiver aberto
 document.addEventListener("DOMContentLoaded", async function () {
     if (!sessionStorage.getItem("ContasDesbloqueadas")) {
         const accounts = await web3.eth.getAccounts();
