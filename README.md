@@ -185,9 +185,9 @@ geth --datadir ./data3 init genesis.json
 ```
 - Executar os 3 nós
 ```
- geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data --port 30303 --http.port 8545 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data --port 30303 --http.port 8545 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
  
-geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data2 --port 30304 --http.port 8546 -nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
+geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data2 --port 30304 --http.port 8546 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
   
 geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdebug --datadir ./data3 --port 30305 --http.port 8547 --nodiscover --allow-insecure-unlock --networkid=1337 --nat extip:127.0.0.1 console
 ```
@@ -204,7 +204,7 @@ geth --http --http.corsdomain="*" --http.api web3,eth,debug,personal,net --vmdeb
 ```
 miner.start()
 ```
-- Executar o servidor do dApp e abrí-lo em localhost:3000, isso permitirá visualizar a interface do usuário e desbloquear as contas habilitando a execução de transações
+- Executar o servidor do dApp e abrí-lo em localhost:3000/dapp, isso permitirá visualizar a interface do usuário e desbloquear as contas habilitando a execução de transações
 ```
 npx serve
 ```
