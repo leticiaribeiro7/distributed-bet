@@ -150,15 +150,15 @@ A recompensa para cada seria:
 </p>
 
 <p align="center">
-    <img src="images/aposta1.jpg" width="600"/>
+    <img src="images/aposta1.jpeg" width="600"/>
     <br/>
-    <b>Figura 3.</b> Exemplo de 2 contas no sistema **antes** da realização de uma aposta. <b>Fonte:</b> Os autores.
+    <b>Figura 3.</b> Exemplo de contas no sistema antes da realização de uma aposta. <b>Fonte:</b> Os autores.
 </p>
 
 <p align="center">
-    <img src="images/aposta2.jpg" width="600"/>
+    <img src="images/aposta2.jpeg" width="600"/>
     <br/>
-    <b>Figura 4.</b> Exemplo de 2 contas no sistema **depois** da realização de uma aposta. <b>Fonte:</b> Os autores.
+    <b>Figura 4.</b> Após a realização de uma aposta. <b>Fonte:</b> Os autores.
 </p>
 
 ### Publicação
